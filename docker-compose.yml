@@ -1,0 +1,12 @@
+services:
+  gophish:
+    build: .
+    container_name: gophish
+    platform: linux/amd64
+    ports:
+      - "3333:3333"
+      - "80:80"
+    restart: always
+    # For production, you may want to persist the database:
+    # volumes:
+    #   - ./gophish.db:/opt/gophish/gophish.db
