@@ -1,12 +1,26 @@
 services:
   gophish:
     build: .
-    container_name: gophish
-    platform: linux/amd64
+    container_name: gophish-container
+    restart: always
     ports:
       - "3333:3333"
-      - "80:80"
+    volumes:
+      - gophish_db:/opt/gophish/gophish.db
+
+  caddy:
+    image: caddy:latest
+    container_name: gophish-caddy-proxy
     restart: always
-    # For production, you may want to persist the database:
-    # volumes:
-    #   - ./gophish.db:/opt/gophish/gophish.db
+    ports:
+      - "80:80"
+      - "443:443"
+    command: caddy reverse-proxy --from ${DOMAIN} --to gophish:8080
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  gophish_db:
+  caddy_data:
+  caddy_config:
