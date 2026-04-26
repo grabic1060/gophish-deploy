@@ -3,24 +3,44 @@ services:
     build: .
     container_name: gophish-container
     restart: always
-    ports:
-      - "3333:3333"
     volumes:
       - gophish_db:/opt/gophish/gophish.db
 
-  caddy:
-    image: caddy:latest
-    container_name: gophish-caddy-proxy
+  nginx:
+    image: nginx:latest
+    container_name: gophish-nginx-proxy
     restart: always
     ports:
       - "80:80"
       - "443:443"
-    command: caddy reverse-proxy --from ${DOMAIN} --to gophish:8080
     volumes:
-      - caddy_data:/data
-      - caddy_config:/config
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - certbot_etc:/etc/letsencrypt
+      - certbot_var:/var/lib/letsencrypt
+      - webroot:/var/www/html
+    depends_on:
+      - gophish
+    command: >
+      /bin/sh -c "
+      mkdir -p /etc/letsencrypt/live/main.urssu.com /etc/letsencrypt/live/gophish.urssu.com &&
+      [ -f /etc/letsencrypt/live/main.urssu.com/fullchain.pem ] || openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/letsencrypt/live/main.urssu.com/privkey.pem -out /etc/letsencrypt/live/main.urssu.com/fullchain.pem -days 1 -subj '/CN=localhost' &&
+      [ -f /etc/letsencrypt/live/gophish.urssu.com/fullchain.pem ] || openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/letsencrypt/live/gophish.urssu.com/privkey.pem -out /etc/letsencrypt/live/gophish.urssu.com/fullchain.pem -days 1 -subj '/CN=localhost' &&
+      while :; do sleep 6h & wait $${!}; nginx -s reload; done & 
+      nginx -g 'daemon off;'
+      "
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot_etc:/etc/letsencrypt
+      - certbot_var:/var/lib/letsencrypt
+      - webroot:/var/www/html
+    # Automated certificate request and renewal check
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot certonly --webroot -w /var/www/html --email admin@urssu.com --agree-tos --no-eff-email -d main.urssu.com -d gophish.urssu.com --keep-until-expiring --non-interactive; sleep 12d & wait $${!}; done;'"
 
 volumes:
   gophish_db:
-  caddy_data:
-  caddy_config:
+  certbot_etc:
+  certbot_var:
+  webroot:
