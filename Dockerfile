@@ -8,6 +8,7 @@ RUN apt-get update && \
     jq \
     ca-certificates \
     wget \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/gophish
@@ -15,9 +16,11 @@ WORKDIR /opt/gophish
 RUN wget "https://github.com/grabic1060/gophish/releases/download/v0.12.1/gophish-v0.12.1-linux-arm64.zip" && \
     unzip gophish*.zip && rm gophish*.zip
 
-RUN jq '.admin_server.listen_url = "0.0.0.0:3333" | .phish_server.listen_url = "0.0.0.0:8080" | .admin_server.use_tls = false' config.json > config.json.tmp && \
+RUN jq '.admin_server.listen_url = "0.0.0.0:3333" | .phish_server.listen_url = "0.0.0.0:9031" | .admin_server.use_tls = false' config.json > config.json.tmp && \
     mv config.json.tmp config.json
 
-EXPOSE 3333 8080
+EXPOSE 3333 9031
+
+RUN chmod +x gophish
 
 CMD ["./gophish"]

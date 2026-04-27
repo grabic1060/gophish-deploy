@@ -1,2 +1,5 @@
 *.pem
 .DS_Store
+*.csv
+groups
+*.db

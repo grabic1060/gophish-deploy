@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+<meta http-equiv="Pragma" content="no-cache"> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=640, user-scalable=no, target-densitydpi=device-dpi">
+<title>숭실대학교 통합로그인</title>
+	<script src="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/jquery.min.js"></script>
+	<script src="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/responsive.js"></script>
+	<script src="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/placeholders.min.js"></script>
+	<script src="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/reset.css">	
+	<link rel="stylesheet" type="text/css" href="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/common4.css">
+	<script type="text/javascript" src="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/common.js" charset="utf-8"></script>
+<script language="JavaScript">
+<!--
+function Notice(){
+	// 2022.04.21. 충분한 안내기간 이후 팝업 해제
+	return;
+	
+	var notetxt = "[긴급] 통합 로그인(SSO) 비밀번호 재설정 필요\r\n\r\n";
+	notetxt = notetxt + "4.5(화) 0시 이후 접속하는 모든 사용자는\r\n";
+	notetxt = notetxt + "[로그인] 버튼 오른쪽 아래에 있는\r\n";
+	notetxt = notetxt + "<비밀번호 초기화(PC)> 버튼을 클릭하여\r\n";
+	notetxt = notetxt + "비밀번호를 재설정하고 사용하시기 바랍니다.";
+	alert(notetxt);
+}
+
+function Pop(pkNum,boardcd){
+	var url = 'https://smartid.ssu.ac.kr/Symtra_Sso/Symtra_Community/BoardView_Popup.asp?pkNum='+pkNum+'&boardcd='+boardcd;
+	window.open (url, 'formpop','status=no, scrollbars=yes,width=850,height=500,top=0,left=0');
+}
+
+function LoginInfoSend(x){
+	f = eval("document."+x)
+	if(EmptyCheck(f.userid)) {return;}
+	if(EmptyCheck(f.pwd)) {return;}
+	f.submit();
+}
+
+// Empty 확인 함수
+function EmptyCheck(ele){
+	if (ele.value==""){
+		alert ( ele.alt + " 입력해 주세요");
+		ele.focus();
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+//엔터 확인
+function keychk(){
+  if (event.keyCode==13 || event.keyCode==10){LoginInfoSend('LoginInfo')}
+}
+document.onkeypress = keychk
+
+// 쿠키가 있나 찾습니다
+function setCookie(name, value, expiredays) {
+	var todayDate = new Date();
+	todayDate.setDate( todayDate.getDate() + expiredays );
+	document.cookie = name + "=" + escape( value ) + "; path=/;" + "domain=smu.ac.kr"
+	//document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" + "domain=wiznet.co.kr"
+	//document.cookie = name + "=" + escape(value) + ((expiredays == null) ? "" : ("; expires=" + todayDate.toGMTString()))+ "; path=/;" + "domain=wiznet.co.kr"
+}
+
+function getCookie(name) {
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length ) {
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+				return unescape( document.cookie.substring( y, endOfCookie ) );
+			}
+			x = document.cookie.indexOf( " ", x ) + 1;
+			if ( x == 0 )
+				break;
+		}
+	return "";
+}
+
+function jsSubmit(){	
+		var form1 = document.LoginInfo;
+
+		window.open("", "auth_popup", "width=430,height=590,scrollbar=yes");
+
+		form1.target = "auth_popup";
+		form1.action = "/kcb/api_cnfrm_popup2.asp";
+		form1.submit();
+	}
+//-->
+</script>
+
+				<link rel="shortcut icon" href="https://smartid.ssu.ac.kr/Symtra_sso/myicon.png" type="image/x-icon">
+				<link rel="icon" href="https://smartid.ssu.ac.kr/Symtra_sso/myicon.png" type="image/x-icon">
+</head>
+
+<!--<body onload="javascript:Notice();"> 2022.04.21. 충분한 안내기간 이후 팝업 해제 -->
+<body class="type_l">
+<div id="cWrap" class="login">
+
+	<!-- sHeader -->
+	<div id="sHeader">
+		<div class="top">
+			<!--<h1 class="tit_h1"><a href="#" class="link">숭실대학교</a></h1>-->
+		</div>
+	</div>
+
+	<!-- 모바일 비주얼 이미지-->
+	<div class="m_img">
+		<!--<img src="Symtra_Images/img_vis.jpg" class="m_vis" />-->
+		<img src="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/sso_login_signature.jpg" class="m_vis">
+	</div>
+	<!-- e 모바일 비주얼 이미지-->
+
+	<div id="sLogin">
+
+		<div class="cont">
+       
+			<div class="area_login">
+				<div class="wrap_tit">
+					<h2 class="tit">통합 LOGIN <span class="txt_s">(sso 로그인)</span></h2> 
+				</div>
+				<form method="POST" action="smln_pcs.asp" name="LoginInfo" target="pFrame">
+				<input type="hidden" name="in_tp_bit" value="0">
+				<input type="hidden" name="rqst_caus_cd" value="03">
+				<div class="wrap_inp">
+					<div class="left">
+						<span class="left_tit">아이디</span><span class="right_tit"><a href="javascript:window.open('notice_id.asp', 'auth_popup', 'width=650,height=screen.availHeight,scrollbar=yes');">ID 안내 &gt;</a></span><br>
+						<input type="text" class="inp placeholder" name="userid" id="userid" placeholder="직번/학번을 입력하세요" alt="아이디를" maxlength="20" tabindex="1"><br>
+						
+						<span class="left_tit">비밀번호</span><span class="right_tit"><a href="javascript:window.open('notice_pw.asp', 'auth_popup', 'width=650,height=screen.availHeight,scrollbar=yes');">비밀번호 안내 &gt;</a></span><br>
+						<input type="password" class="inp placeholder" name="pwd" tabindex="2" id="pwd" maxlength="20" alt="비밀번호를" placeholder="비밀번호를 입력하세요">
+						<span class="check"><input type="checkbox" class="inp_chk" id="chkSave" name="chkSave"><label for="checkId">아이디저장</label>
+						</span>
+					</div>
+					<div class="left">
+						<a href="javascript:LoginInfoSend('LoginInfo');" class="btn_login">로그인</a>	
+					</div><p class="desc"></p>
+					<div class="left">
+						<span class="left_tit">
+							<a href="https://smartid.ssu.ac.kr/Symtra_Sso/smln_IDFind.asp" class="">ID찾기 &gt;</a>
+						</span>
+						<span class="right_tit">
+							<label><a href="https://smartid.ssu.ac.kr/Symtra_Sso/smln_pwd.asp" !onclick="jsSubmit();">비밀번호 초기화(PC) &gt;</a></label>
+						</span>
+					</div>
+				
+				</div></form><br>
+				<div class="wrap_call">
+					<!--<img src="/Symtra_images/sso_login_call.png" width="32px" height="40px">-->
+					<img src="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/sso_login_call.png" width="25px" height="30px">
+					<font style="vertical-align: middle;">아이디/비밀번호 문의:02-820-0067~8	</font>
+				</div>
+
+			</div>
+
+			<div class="area_notice2">
+				<img src="%E1%84%89%E1%85%AE%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AF%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%86%A8%E1%84%80%E1%85%AD%20%E1%84%90%E1%85%A9%E1%86%BC%E1%84%92%E1%85%A1%E1%86%B8%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3%E1%84%8B%E1%85%B5%E1%86%AB_files/sso_login_signature2.jpg" width="67px" height="500px">
+			</div>
+	
+		
+<form name="kcbResultForm" method="post">
+	<input type="hidden" name="mem_id" value="">
+	<input type="hidden" name="svc_tx_seqno" value="">
+	<input type="hidden" name="rqst_caus_cd" value="">
+	<input type="hidden" name="hs_cert_msr_cd" value="">
+	<input type="hidden" name="result_cd" value="">
+	<input type="hidden" name="result_msg" value="">
+	<input type="hidden" name="cert_dt_tm" value="">
+	<input type="hidden" name="di" value="">
+	<input type="hidden" name="ci" value="">
+	<input type="hidden" name="name" value="">
+	<input type="hidden" name="birthday" value="">
+	<input type="hidden" name="sex" value="">
+	<input type="hidden" name="nation" value="">
+	<input type="hidden" name="tel_com_cd" value="">
+	<input type="hidden" name="tel_no" value="">
+	<input type="hidden" name="return_msg" value="">
+</form>  
+
+		</div>
+	</div>
+
+	<!-- footer -->
+		  <!-- footer -->
+	<div id="sFooter">
+		<p class="address"> 
+			<!--<span class="txt">06978 369, Sangdo-ro, Dongjak-gu, Seoul, Republic of Korea  Tel: 02-820-0114</span> -->
+			<span class="txt">06978 서울시 동작구 상도로 369 숭실대학교 TEL. 02-820-0114</span>
+		</p>
+		<p class="copyright">
+			<!--COPYRIGHT SOONGSIL UNIVERSITY.-->
+			Copyright Soongsil University All Rights Reserved.
+		</p>
+	</div>
+	<!--e footer -->
+
+	<!--e footer -->
+
+
+</div>
+
+
+<iframe id="pFrame" style="DISPLAY:none;" width="600" height="200" name="pFrame"></iframe>	
+
+</body></html>
