@@ -3,7 +3,7 @@ services:
     image: ${ECR_REGISTRY}/yourssu/${PROJECT_NAME}:${IMAGE_TAG:-latest}
     restart: always
     ports:
-      - "${SERVER_PORT:-3333}:3333"
+      - "3333:3333"
       - "9031:9031"
     volumes:
       - ./config.json:/opt/gophish/config.json
