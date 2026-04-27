@@ -27,7 +27,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 1. AWS 인증 (Secrets 사용)
+      # 1. AWS 인증
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -62,39 +62,38 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           HOST: ${{ secrets.EC2_STG_HOST }}
-          
           PROJECT_NAME: ${{ vars.PROJECT_NAME }}
           SERVER_PORT: ${{ vars.SERVER_PORT }}
           REGISTRY_ID: ${{ vars.ECR_PUBLIC_REGISTRY_ID }}
+          IMAGE_TAG: ${{ github.sha }} # 빌드에서 사용한 태그를 그대로 사용
         run: |
           mkdir -p ~/.ssh
-          LATEST_TAG=$(aws ecr-public describe-images \
-            --repository-name yourssu/$PROJECT_NAME \
-            --region us-east-1 \
-            --query 'sort_by(imageDetails, &imagePushedAt)[-1].imageTags[0]' \
-            --output text)
-          
-          echo "Found latest tag in ECR: $LATEST_TAG"
-
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
 
+          # [핵심] EC2 서버에서 ECR Public 로그인 수행 (토큰 만료 해결)
+          aws ecr-public get-login-password --region us-east-1 | ssh -i key.pem ubuntu@$HOST "docker login --username AWS --password-stdin public.ecr.aws/$REGISTRY_ID"
+
           # 서버에 디렉토리 생성
           ssh -i key.pem ubuntu@$HOST "mkdir -p /home/ubuntu/${PROJECT_NAME}"
-          
-          # .env 파일 생성
+
+          # .env 파일 생성 (Runner에서 생성 후 전송)
           echo "SERVER_PORT=$SERVER_PORT" > .env
           echo "PROJECT_NAME=$PROJECT_NAME" >> .env
           echo "ECR_REGISTRY=public.ecr.aws/$REGISTRY_ID" >> .env
-          echo "IMAGE_TAG=$LATEST_TAG" >> .env
-          
+          echo "IMAGE_TAG=$IMAGE_TAG" >> .env # 조회 과정 없이 바로 주입
+          echo "DB_URL=${{ secrets.DB_URL }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+
           # 파일 전송
-          scp -i key.pem .env ubuntu@$HOST:/home/ubuntu/${PROJECT_NAME}/.env
-          scp -i key.pem docker-compose.yml ubuntu@$HOST:/home/ubuntu/${PROJECT_NAME}/docker-compose.yml
-          scp -i key.pem config.json ubuntu@$HOST:/home/ubuntu/${PROJECT_NAME}/config.json
-          
-          # 배포 명령 실행 (docker-compose 사용)
-          ssh -i key.pem ubuntu@$HOST "mkdir -p /home/ubuntu/${PROJECT_NAME} && cd /home/ubuntu/${PROJECT_NAME} && \
+          scp -i key.pem .env docker-compose.yml config.json ubuntu@$HOST:/home/ubuntu/${PROJECT_NAME}/
+
+          # 배포 명령 실행
+          ssh -i key.pem ubuntu@$HOST "cd /home/ubuntu/${PROJECT_NAME} && \
             docker compose pull && \
             docker compose up -d"
+
+          # 보안을 위해 사용한 키 삭제
+          rm -f key.pem
