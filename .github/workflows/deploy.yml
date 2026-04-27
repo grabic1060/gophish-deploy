@@ -88,9 +88,6 @@ jobs:
           echo "PROJECT_NAME=$PROJECT_NAME" >> .env
           echo "ECR_REGISTRY=public.ecr.aws/$REGISTRY_ID" >> .env
           echo "IMAGE_TAG=$LATEST_TAG" >> .env
-          echo "DB_URL=${{ secrets.DB_URL }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           
           # 파일 전송
           scp -i key.pem .env ubuntu@$HOST:/home/ubuntu/${PROJECT_NAME}/.env
